@@ -9,13 +9,18 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('tasks', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
-    }
+public function up(): void
+{
+    Schema::create('tasks', function (Blueprint $table) {
+        $table->id();                            
+        $table->string('title');              
+        $table->string('file_path')->nullable();   
+        $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
+        $table->text('description')->nullable();
+        $table->timestamps();                   
+    });
+}
+
 
     /**
      * Reverse the migrations.
