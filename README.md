@@ -1,13 +1,14 @@
-# Laravel API: Testülesanne
+# Laravel API: Testülesanne / Test task
 
-## Projekt lokaselt käima:
+## Projekt lokaselt käima / Run locally:
 
-git clone <repo-url>
-cd task-manager-api
-composer install
-cp .env.example .env
-touch database/database.sqlite
-php artisan migrate --seed
+```
+git clone <repo-url>| 
+cd task-manager-api|
+composer install|
+cp .env.example .env|
+touch database/database.sqlite|
+php artisan migrate --seed|
 php artisan serve
 
 ## Autentimine / AUTH
@@ -27,7 +28,7 @@ Tagastab Bearer Tokeni.
 
 | Meetod | Endpoint                 | Kirjeldus                |
 | ------ | ------------------------ | ------------------------ |
-| GET    | `/api/ping`              | Kontroll, kas API töötab |
+| GET    | `/api/ping`              | Kontroll, kas API töötab | 
 | POST   | `/api/login`             | Logi sisse               |
 | GET    | `/api/tasks`             | Tagasta kõik ülesanded   |
 | POST   | `/api/tasks`             | Loo uus ülesanne         |
