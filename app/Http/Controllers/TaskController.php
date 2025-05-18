@@ -17,8 +17,10 @@ class TaskController extends Controller
 
     public function index()
     {
+        $tasks = $this->taskService->all();
         return response()->json([
-            'ülesanded' => $this->taskService->all()
+            'ülesanded' => $tasks,
+            'kogus' => $tasks->count(),
         ]);
     }
 
