@@ -14,10 +14,11 @@ class Task extends Model
         'title',
         'description',
         'file_path',
+        'status',
         'user_id',
         'uuid',
     ];
-
+    protected $appends = ['attachment_url'];
     protected $casts = [
         'uuid' => 'string',
     ];
@@ -29,11 +30,19 @@ class Task extends Model
             if (empty($task->uuid)) {
                 $task->uuid = (string) Str::uuid();
             }
+            if (empty($task->status)) {
+                $task->status = 'pending';
+            }
         });
     }
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getAttachmentUrlAttribute(): ?string
+    {
+        return $this->file_path ? asset('storage/' . $this->file_path) : null;
     }
 }

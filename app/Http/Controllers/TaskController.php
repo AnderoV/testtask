@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 class TaskController extends Controller
 {
     private TaskService $taskService;
+
     public function __construct(TaskService $taskService)
     {
         $this->taskService = $taskService;
@@ -29,6 +30,7 @@ class TaskController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'status' => 'nullable|string|in:pending,in_progress,done',
         ]);
 
         $task = $this->taskService->create($validated);
@@ -38,48 +40,63 @@ class TaskController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, Task $task)
+    public function show($uuid)
     {
+    $task = Task::where('uuid', $uuid)->firstOrFail();
+    return response()->json([
+        'ülesanne' => $task
+    ]);
+    }
+
+    public function update(Request $request, $uuid)
+    {
+        $task = Task::where('uuid', $uuid)->firstOrFail();
         $validated = $request->validate([
             'title' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
+            'status' => 'sometimes|in:pending,in_progress,done',
         ]);
-
         $this->taskService->update($task, $validated);
+
+        Log::info('Ülesanne uuendatud: ' . $task->uuid, [ 'muudetud_andmed' => $validated]);
         return response()->json([
             'sõnum' => 'Ülesanne uuendatud',
             'ülesanne' => $task
         ]);
     }
 
-    public function destroy(Task $task)
+    public function destroy($uuid)
     {
+        $task = Task::where('uuid', $uuid)->firstOrFail();
         $this->taskService->delete($task);
+
+        Log::info('Ülesanne kustutatud: ' . $task->uuid);
         return response()->json([
             'sõnum' => 'Ülesanne kustutatud'
         ]);
     }
 
-    public function upload(Request $request, Task $task)
-{
-    Log::info('Upload funkab');
-    \Log::info('UPLOAD ALGAS');
-    \Log::info('User: ' . optional(auth()->user())->email);
-    \Log::info('Task ID: ' . $task->id);
-    \Log::info('Has file: ' . json_encode($request->hasFile('file')));
+    public function upload(Request $request, $uuid)
+    {
+        $task = Task::where('uuid', $uuid)->firstOrFail();
 
-    $request->validate([
-        'file' => 'required|file|max:2048',
-    ]);
+        Log::info('Upload funkab');
+        \Log::info('UPLOAD ALGAS');
+        \Log::info('User: ' . optional(auth()->user())->email);
+        \Log::info('Task UUID: ' . $task->uuid);
+        \Log::info('Has file: ' . json_encode($request->hasFile('file')));
 
-    $filename = time() . '_' . $request->file('file')->getClientOriginalName();
-    $path = $request->file('file')->storeAs('tasks', $filename, 'public');
-    $task->update(['file_path' => $path]);
+        $request->validate([
+            'file' => 'required|file|max:2048',
+        ]);
 
-    return response()->json([
-        'sõnum' => 'Fail laaditud',
-        'failitee' => $path,
-        'link' => asset('storage/' . $path)
-    ]);
-}
+        $filename = time() . '_' . $request->file('file')->getClientOriginalName();
+        $path = $request->file('file')->storeAs('tasks', $filename, 'public');
+        $task->update(['file_path' => $path]);
+        return response()->json([
+            'sõnum' => 'Fail laaditud',
+            'failitee' => $path,
+            'link' => asset('storage/' . $path)
+        ]);
+    }
 }

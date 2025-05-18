@@ -1,6 +1,6 @@
 # Laravel API: Testülesanne / Test task
 
-## Projekt lokaselt käima / Run locally:
+## Projekt lokaselt käima / Run locally (first time setup/ ühekordne):
 
 ```
 git clone <repo-url>| 
@@ -18,23 +18,23 @@ POST /api/login
 Body (JSON):
 
 {
-  "email": "test@example.com",
-  "password": "salasona"
+  "email": "admin@example.com",
+  "password": "password123"
 }
 
 Tagastab Bearer Tokeni.
 
 ## API Endpointid
 
-| Meetod | Endpoint                 | Kirjeldus                |
-| ------ | ------------------------ | ------------------------ |
-| GET    | `/api/ping`              | Kontroll, kas API töötab | 
-| POST   | `/api/login`             | Logi sisse               |
-| GET    | `/api/tasks`             | Tagasta kõik ülesanded   |
-| POST   | `/api/tasks`             | Loo uus ülesanne         |
-| PUT    | `/api/tasks/{id}`        | Uuenda olemasolevat      |
-| DELETE | `/api/tasks/{id}`        | Kustuta ülesanne         |
-| POST   | `/api/tasks/{id}/upload` | Laadi fail üles          |
+| Meetod | Endpoint                 | 
+| ------ | ------------------------ | 
+| GET    | `/api/ping`              | 
+| POST   | `/api/login`             | 
+| GET    | `/api/tasks`             | 
+| POST   | `/api/tasks`             | 
+| PUT    | `/api/tasks/{id}`        | 
+| DELETE | `/api/tasks/{id}`        | 
+| POST   | `/api/tasks/{id}/upload` | 
 
 NB: Kõik ülesande endpointid vajavad Bearer Tokenit / All endpoints need the Bearer Token
 
@@ -46,14 +46,6 @@ bash
 curl -X POST http://127.0.0.1:8000/api/tasks/1/upload \
   -H "Authorization: Bearer <TOKEN>" \
   -F "file=@/Users/username/cv.pdf"
-
-## Tehtud / Done
-
-* Autentimine Sanctumiga / AUTH using Sanctum
-* Seeder testkasutajaga: [test@example.com] / Seeder w/ test user:test@example.com ; salasona (password)
-* CRUD API ülesannetele / CRUD API for tasks
-* Failide üleslaadimine `storage/app/public/tasks` kausta / file upload to storage/app/public/tasks 
-* UUID automaatne genereerimine / Automatic UUID generation 
 
 ---
 Andero Voosalu
